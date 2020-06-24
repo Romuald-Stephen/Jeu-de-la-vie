@@ -2,20 +2,26 @@ import threading
 
 import pygame
 
+
+
 # Define some colors
+# from main import x, y
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
-
 class Gui(threading.Thread):
-    def __init__(self):
+    def __init__(self, x = 20, y = 10):
         threading.Thread.__init__(self)
         self.width = 20
         self.height = 20
         self.margin = 5
         self.grid = []
+        self.x = x
+        self.y = y
+
 
         for row in range(20):
             # Add an empty array that will hold each cell
@@ -24,15 +30,16 @@ class Gui(threading.Thread):
             for column in range(40):
                 self.grid[row].append(0)  # Append a cell
 
-    def updateCell(self,x,y,valeur):
-        self.grid[x][y]=valeur
+    def updateCell(self, x, y, valeur):
+
+        self.grid[x][y] = valeur
 
     def run(self):
         # Initialize pygame
         pygame.init()
 
         # Set the HEIGHT and WIDTH of the screen
-        WINDOW_SIZE = [1005, 505]
+        WINDOW_SIZE = [self.x*(self.width+self.margin)+self.margin, self.y*(self.height+self.margin)+self.margin,]
         screen = pygame.display.set_mode(WINDOW_SIZE)
 
         # Set title of screen
@@ -45,6 +52,7 @@ class Gui(threading.Thread):
         clock = pygame.time.Clock()
 
         # -------- Main Program Loop -----------
+
         while not done:
             for event in pygame.event.get():  # User did something
                 if event.type == pygame.QUIT:  # If user clicked close
@@ -61,17 +69,17 @@ class Gui(threading.Thread):
 
             # Set the screen background
             screen.fill(BLACK)
-
             # Draw the grid
-            for row in range(20):
-                for column in range(40):
+
+            for row in range(self.x):
+                for column in range(self.y):
                     color = WHITE
                     if self.grid[row][column] == 1:
-                        color = GREEN
+                        color = BLACK
                     if self.grid[row][column] == 2:
                         color = RED
                     if self.grid[row][column] == 3:
-                        color = BLACK
+                        color = GREEN
                     pygame.draw.rect(screen,
                                      color,
                                      [(self.margin + self.width) * column + self.margin,
